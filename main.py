@@ -1,7 +1,6 @@
 from os import environ
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
-from src.db_manager import DB_Manager
 
 
 def createToken(bot_token):
