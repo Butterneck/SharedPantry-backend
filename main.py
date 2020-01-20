@@ -1,6 +1,8 @@
 from os import environ
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from flask_restful import Resource, Api
+from src.Configuration.Configure import Configuration
 
 
 def createToken(bot_token):
@@ -16,15 +18,15 @@ def checkToken(token):
 
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app)
 
-dbm = DB_Manager('')
+dbm = Configuration().configure_local_test()
 
 
 class GetToken(Resource):
     def post(self):
         data = request.get_json()
-        print(data)
         token = data['token']
         return jsonify(createToken(token))
 
@@ -100,7 +102,7 @@ class GetUserFromChatId(Resource):
         token = data['token']
         chat_id = data['data']['chat_id']
         if checkToken(token):
-            return jsonify(dbm.getUserFromUsername(chat_id))
+            return jsonify(dbm.getUserFromChatId(chat_id))
 
 
 class GetAllUsers(Resource):
