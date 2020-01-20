@@ -34,7 +34,7 @@ class DB_Manager():
             'id': user.chat_id,
             'username': user.username
             }
-        }, 201
+        }
 
     def addProduct(self, name, price, qt):
         from src.DBClasses.Product import Product
@@ -47,7 +47,7 @@ class DB_Manager():
             'name': product.name,
             'quantity': product.quantity
             }
-        }, 201
+        }
 
     def editQuantity(self, product_id, qt):
         from src.DBClasses.Product import Product
@@ -60,13 +60,13 @@ class DB_Manager():
             'name': product.name,
             'quantity': product.quantity
             }
-        }, 200 if product is not None else None, 409
+        } if product is not None else None
 
     def addTransaction(self, chat_id, product_id, qt):
         from src.DBClasses.Transaction import Transaction
         from datetime import date
         if not self.checkAvailability(product_id):
-            return None, 403
+            return None
         transaction = Transaction(chat_id, product_id, date.today(), qt)
         session = self.Session()
         session.add(transaction)
@@ -77,7 +77,7 @@ class DB_Manager():
             'date': transaction.date,
             'quantity': transaction.quantity
             }
-        }, 201
+        }
 
     def checkAvailability(self, product_id):
         from src.DBClasses.Product import Product
@@ -118,19 +118,22 @@ class DB_Manager():
                 'username': user.username,
                 'is_admin': user.is_admin
             }
-        }, 200 if user is not None else None, 404
+        } if user is not None else None
 
     def getUserFromChatId(self, chat_id):
         from src.DBClasses.User import User
         session = self.Session()
-        print(chat_id)
         user = session.query(User).filter_by(chat_id=chat_id).first()
-        return {'user': {
-                'chat_id': user.chat_id,
-                'username': user.username,
-                'is_admin': user.is_admin
+        print(user)
+        if user is not None:
+            return {'user': {
+                    'chat_id': user.chat_id,
+                    'username': user.username,
+                    'is_admin': user.is_admin
+                }
             }
-        },200 if user is not None else None, 404
+        else:
+            return None
 
     def getAllUsers(self):
         from src.DBClasses.User import User
@@ -142,7 +145,7 @@ class DB_Manager():
                 'username': user.username,
                 'is_admin': user.is_admin
             })
-        return {'users': users}, 200 if users is not None else None, 404
+        return {'users': users}  if users is not None else None
 
     def activateActivator(self):
         from src.DBClasses.Activator import Activator
@@ -150,7 +153,7 @@ class DB_Manager():
         activator = session.query(Activator).first()
         activator.activator = True
         session.commit()
-        return {'activator': activator.activator}, 200 if activator is not None else None, 403
+        return {'activator': activator.activator}  if activator is not None else None
 
     def deactivateActivator(self):
         from src.DBClasses.Activator import Activator
@@ -158,13 +161,13 @@ class DB_Manager():
         activator = session.query(Activator).first()
         activator.activator = False
         session.commit()
-        return {'activator': activator.activator}, 200 if activator is not None else None, 403
+        return {'activator': activator.activator} if activator is not None else None
 
     def checkActivator(self):
         from src.DBClasses.Activator import Activator
         session = self.Session()
         activator = session.query(Activator).first()
-        return {'activator': activator.activator}, 200 if activator is not None else None, 404
+        return {'activator': activator.activator} if activator is not None else None
 
     def activateBackup(self):
         from src.DBClasses.Backup import Backup
@@ -172,7 +175,7 @@ class DB_Manager():
         backup= session.query(Backup).first()
         backup.backup = True
         session.commit()
-        return {'backup': backup.backup}, 200 if backup is not None else None, 404
+        return {'backup': backup.backup} if backup is not None else None
 
     def deactivateBackup(self):
         from src.DBClasses.Backup import Backup
@@ -180,13 +183,13 @@ class DB_Manager():
         backup = session.query(Backup).first()
         backup.backup = False
         session.commit()
-        return {'backup': backup.backup}, 200 if backup is not None else None, 404
+        return {'backup': backup.backup} if backup is not None else None
 
     def checkBackup(self):
         from src.DBClasses.Backup import Backup
         session = self.Session()
         backup = session.query(Backup).first()
-        return {'backup': backup.backup}, 200 if backup is not None else None, 404
+        return {'backup': backup.backup} if backup is not None else None
 
     def getAcquistiIn(self):
         return
