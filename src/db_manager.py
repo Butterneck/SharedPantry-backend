@@ -32,7 +32,7 @@ class DB_Manager():
         session.commit()
         return {'user': {
             'id': user.chat_id,
-            'username': user.username,
+            'username': user.username
             }
         }
 
@@ -108,7 +108,8 @@ class DB_Manager():
         user = session.query(User).filter_by(username=username).first()
         return {'user': {
                 'chat_id': user.chat_id,
-                'username': user.username
+                'username': user.username,
+                'is_admin': user.is_admin
             }
         } if user is not None else None
 
@@ -119,7 +120,8 @@ class DB_Manager():
         user = session.query(User).filter_by(chat_id=chat_id).first()
         return {'user': {
                 'chat_id': user.chat_id,
-                'username': user.username
+                'username': user.username,
+                'is_admin': user.is_admin
             }
         } if user is not None else None
 
@@ -130,7 +132,8 @@ class DB_Manager():
         for user in session.query(User).all():
             users.append({
                 'chat_id': user.chat_id,
-                'username': user.username
+                'username': user.username,
+                'is_admin': user.is_admin
             })
         return {'users': users} if users is not None else None
 
