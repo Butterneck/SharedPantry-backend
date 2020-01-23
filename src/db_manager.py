@@ -82,7 +82,7 @@ class DB_Manager():
     def checkAvailability(self, product_id):
         from src.DBClasses.Product import Product
         session = self.Session()
-        return session.query(Product).filter_by(product_id=product_id).first().quantity
+        return session.query(Product).filter_by(id=product_id).first().quantity
 
     def getAllProducts(self):
         from src.DBClasses.Product import Product
