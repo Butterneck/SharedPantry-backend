@@ -31,7 +31,7 @@ class GetToken(Resource):
         data = request.get_json()
         token = data['token']
         res = createToken(token)
-        return jsonify(res) if res is not None else 500
+        return jsonify(res), 200 if res is not None else 500
 
 
 class AddUser(Resource):
@@ -42,7 +42,7 @@ class AddUser(Resource):
         chat_id = data['data']['chat_id']
         if checkToken(token):
             res = dbm.addUser(chat_id, username)
-            return jsonify(res) if res is not None else 500
+            return jsonify(res), 200 if res is not None else 500
         else:
             return 403
 
@@ -56,7 +56,7 @@ class AddProduct(Resource):
         quantity = data['data']['quantity']
         if checkToken(token):
             res = dbm.addProduct(name, price, quantity)
-            return jsonify(res) if res is not None else 500
+            return jsonify(res), 200 if res is not None else 500
         else:
             return 403
 
@@ -83,7 +83,7 @@ class AddTransaction(Resource):
         quantity = data['data']['quantity']
         if checkToken(token):
             res = dbm.addTransaction(chat_id, product_id, quantity)
-            return jsonify(res) if res is not None else 500
+            return jsonify(res), 200 if res is not None else 500
         else:
             return 403
 
@@ -94,7 +94,7 @@ class GetAllProducts(Resource):
         token = data['token']
         if checkToken(token):
             res = dbm.getAllProducts()
-            return jsonify(res) if res is not None else 500
+            return jsonify(res), 200 if res is not None else 500
         else:
             return 403
 
@@ -103,7 +103,7 @@ class GetAllTransactions(Resource):
     def post(self, token):
         if checkToken(token):
             res = dbm.getAllTransactions()
-            return jsonify(res) if res is not None else 500
+            return jsonify(res), 200 if res is not None else 500
         else:
             return 403
 
@@ -115,7 +115,7 @@ class GetUserFromUsername(Resource):
         username = data['data']['username']
         if checkToken(token):
             res = dbm.getUserFromUsername(username)
-            return jsonify(res) if res is not None else 500
+            return jsonify(res), 200 if res is not None else 500
         else:
             return 403
 
@@ -127,7 +127,7 @@ class GetUserFromChatId(Resource):
         chat_id = data['data']['chat_id']
         if checkToken(token):
             res = dbm.getUserFromChatId(chat_id)
-            return jsonify(res) if res is not None else 500
+            return jsonify(res), 200 if res is not None else 500
         else:
             return 403
 
@@ -138,7 +138,7 @@ class GetAllUsers(Resource):
         token = data['token']
         if checkToken(token):
             res = dbm.getAllUsers()
-            return jsonify(res) if res is not None else 500
+            return jsonify(res), 200 if res is not None else 500
         else:
             return 403
 
