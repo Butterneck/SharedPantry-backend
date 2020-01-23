@@ -31,7 +31,13 @@ class GetToken(Resource):
         data = request.get_json()
         token = data['token']
         res = createToken(token)
-        return jsonify(res), 200 if res is not None else 500
+        if res is not None:
+            response = jsonify(res)
+            response.status_code = 200
+        else:
+            response = jsonify(None)
+            response.status_code = 403
+        return response
 
 
 class AddUser(Resource):
@@ -42,9 +48,17 @@ class AddUser(Resource):
         chat_id = data['data']['chat_id']
         if checkToken(token):
             res = dbm.addUser(chat_id, username)
-            return jsonify(res), 200 if res is not None else 500
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify({})
+                response.status_code = 500
         else:
-            return 403
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
 
 
 class AddProduct(Resource):
@@ -56,9 +70,17 @@ class AddProduct(Resource):
         quantity = data['data']['quantity']
         if checkToken(token):
             res = dbm.addProduct(name, price, quantity)
-            return jsonify(res), 200 if res is not None else 500
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify({})
+                response.status_code = 500
         else:
-            return 403
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
 
 
 class EditQuantity(Resource):
@@ -69,9 +91,17 @@ class EditQuantity(Resource):
         quantity = data['data']['quantity']
         if checkToken(token):
             res = dbm.editQuantity(product_id, quantity)
-            return jsonify(res), 200 if res is not None else 500
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify({})
+                response.status_code = 500
         else:
-            return 403
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
 
 
 class AddTransaction(Resource):
@@ -83,9 +113,17 @@ class AddTransaction(Resource):
         quantity = data['data']['quantity']
         if checkToken(token):
             res = dbm.addTransaction(chat_id, product_id, quantity)
-            return jsonify(res), 200 if res is not None else 500
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify({})
+                response.status_code = 500
         else:
-            return 403
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
 
 
 class GetAllProducts(Resource):
@@ -94,18 +132,34 @@ class GetAllProducts(Resource):
         token = data['token']
         if checkToken(token):
             res = dbm.getAllProducts()
-            return jsonify(res), 200 if res is not None else 500
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify({})
+                response.status_code = 500
         else:
-            return 403
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
 
 
 class GetAllTransactions(Resource):
     def post(self, token):
         if checkToken(token):
             res = dbm.getAllTransactions()
-            return jsonify(res), 200 if res is not None else 500
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify({})
+                response.status_code = 500
         else:
-            return 403
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
 
 
 class GetUserFromUsername(Resource):
@@ -115,9 +169,17 @@ class GetUserFromUsername(Resource):
         username = data['data']['username']
         if checkToken(token):
             res = dbm.getUserFromUsername(username)
-            return jsonify(res), 200 if res is not None else 500
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify({})
+                response.status_code = 500
         else:
-            return 403
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
 
 
 class GetUserFromChatId(Resource):
@@ -127,9 +189,17 @@ class GetUserFromChatId(Resource):
         chat_id = data['data']['chat_id']
         if checkToken(token):
             res = dbm.getUserFromChatId(chat_id)
-            return jsonify(res), 200 if res is not None else 500
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify({})
+                response.status_code = 500
         else:
-            return 403
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
 
 
 class GetAllUsers(Resource):
@@ -138,9 +208,17 @@ class GetAllUsers(Resource):
         token = data['token']
         if checkToken(token):
             res = dbm.getAllUsers()
-            return jsonify(res), 200 if res is not None else 500
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify({})
+                response.status_code = 500
         else:
-            return 403
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
 
 
 class GetAcquistiIn(Resource):
