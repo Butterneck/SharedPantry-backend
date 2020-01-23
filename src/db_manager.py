@@ -67,6 +67,7 @@ class DB_Manager():
         from datetime import date
         if not self.checkAvailability(product_id):
             return None
+        self.pick_up(product_id)
         transaction = Transaction(chat_id, product_id, date.today(), qt)
         session = self.Session()
         session.add(transaction)
@@ -83,6 +84,12 @@ class DB_Manager():
         from src.DBClasses.Product import Product
         session = self.Session()
         return session.query(Product).filter_by(id=product_id).first().quantity
+
+    def pick_up(self, product_id):
+        from src.DBClasses.Product import Product
+        session = self.Session()
+        current_quantity = session.query(Product).filter_by(id=product_id).first().quantity
+        self.editQuantity(product_id, current_quantity - 1)
 
     def getAllProducts(self):
         from src.DBClasses.Product import Product
@@ -125,7 +132,6 @@ class DB_Manager():
         from src.DBClasses.User import User
         session = self.Session()
         user = session.query(User).filter_by(chat_id=chat_id).first()
-        print(user)
         if user is not None:
             return {'user': {
                     'chat_id': user.chat_id,
