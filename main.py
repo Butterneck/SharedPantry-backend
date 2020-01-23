@@ -11,6 +11,8 @@ def createToken(bot_token):
         token = token_urlsafe()
         environ['BACKEND_TOKEN'] = token
         return {'token': token}
+    else:
+        return None
 
 
 def checkToken(token):
@@ -28,7 +30,8 @@ class GetToken(Resource):
     def post(self):
         data = request.get_json()
         token = data['token']
-        return jsonify(createToken(token))
+        res = createToken(token)
+        return jsonify(res) if res is not None else 500
 
 
 class AddUser(Resource):
@@ -38,7 +41,10 @@ class AddUser(Resource):
         username = data['data']['username']
         chat_id = data['data']['chat_id']
         if checkToken(token):
-            return jsonify(dbm.addUser(chat_id, username))
+            res = dbm.addUser(chat_id, username)
+            return jsonify(res) if res is not None else 500
+        else:
+            return 403
 
 
 class AddProduct(Resource):
@@ -49,7 +55,10 @@ class AddProduct(Resource):
         price = data['data']['price']
         quantity = data['data']['quantity']
         if checkToken(token):
-            return jsonify(dbm.addProduct(name, price, quantity))
+            res = dbm.addProduct(name, price, quantity)
+            return jsonify(res) if res is not None else 500
+        else:
+            return 403
 
 
 class EditQuantity(Resource):
@@ -59,7 +68,10 @@ class EditQuantity(Resource):
         product_id = data['data']['product_id']
         quantity = data['data']['quantity']
         if checkToken(token):
-            return jsonify(dbm.editQuantity(product_id, quantity))
+            res = dbm.editQuantity(product_id, quantity)
+            return jsonify(res), 200 if res is not None else 500
+        else:
+            return 403
 
 
 class AddTransaction(Resource):
@@ -70,7 +82,10 @@ class AddTransaction(Resource):
         product_id = data['data']['product_id']
         quantity = data['data']['quantity']
         if checkToken(token):
-            return jsonify(dbm.addTransaction(chat_id, product_id, quantity))
+            res = dbm.addTransaction(chat_id, product_id, quantity)
+            return jsonify(res) if res is not None else 500
+        else:
+            return 403
 
 
 class GetAllProducts(Resource):
@@ -78,13 +93,19 @@ class GetAllProducts(Resource):
         data = request.get_json()
         token = data['token']
         if checkToken(token):
-            return jsonify(dbm.getAllProducts())
+            res = dbm.getAllProducts()
+            return jsonify(res) if res is not None else 500
+        else:
+            return 403
 
 
 class GetAllTransactions(Resource):
     def post(self, token):
         if checkToken(token):
-            return jsonify(dbm.getAllTransactions())
+            res = dbm.getAllTransactions()
+            return jsonify(res) if res is not None else 500
+        else:
+            return 403
 
 
 class GetUserFromUsername(Resource):
@@ -93,7 +114,10 @@ class GetUserFromUsername(Resource):
         token = data['token']
         username = data['data']['username']
         if checkToken(token):
-            return jsonify(dbm.getUserFromUsername(username))
+            res = dbm.getUserFromUsername(username)
+            return jsonify(res) if res is not None else 500
+        else:
+            return 403
 
 
 class GetUserFromChatId(Resource):
@@ -102,7 +126,10 @@ class GetUserFromChatId(Resource):
         token = data['token']
         chat_id = data['data']['chat_id']
         if checkToken(token):
-            return jsonify(dbm.getUserFromChatId(chat_id))
+            res = dbm.getUserFromChatId(chat_id)
+            return jsonify(res) if res is not None else 500
+        else:
+            return 403
 
 
 class GetAllUsers(Resource):
@@ -110,7 +137,10 @@ class GetAllUsers(Resource):
         data = request.get_json()
         token = data['token']
         if checkToken(token):
-            return jsonify(dbm.getAllUsers())
+            res = dbm.getAllUsers()
+            return jsonify(res) if res is not None else 500
+        else:
+            return 403
 
 
 class GetAcquistiIn(Resource):
