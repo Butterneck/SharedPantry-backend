@@ -90,6 +90,7 @@ class DB_Manager():
         products = []
         for product in session.query(Product).all():
             products.append({
+                'id': product.id,
                 'name': product.name,
                 'price': product.price,
                 'quantity': product.quantity
