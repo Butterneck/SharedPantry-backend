@@ -64,11 +64,11 @@ class DB_Manager():
 
     def addTransaction(self, chat_id, product_id, qt):
         from src.DBClasses.Transaction import Transaction
-        from datetime import date
+        from datetime import datetime
         if not self.checkAvailability(product_id):
             return None
         self.pick_up(product_id)
-        transaction = Transaction(chat_id, product_id, date.today(), qt)
+        transaction = Transaction(chat_id, product_id, datetime.now().replace(microsecond=0), qt)
         session = self.Session()
         session.add(transaction)
         session.commit()
@@ -198,5 +198,9 @@ class DB_Manager():
         backup = session.query(Backup).first()
         return {'backup': backup.backup} if backup is not None else None
 
-    def getAcquistiIn(self):
-        return
+    def getAcquistiIn(self, user_id, startDate, endDate):
+        from src.DBClasses.Transaction import Transaction
+        session = self.Session()
+        transactions = session.query(Transaction).filter_by(user_id=user_id).filter(Transaction.date >= startDate).filter(Transaction.date <= endDate).all()
+        return {'transactions': transactions} if transactions is not None else None
+

@@ -52,7 +52,7 @@ class AddUser(Resource):
                 response = jsonify(res)
                 response.status_code = 200
             else:
-                response = jsonify({})
+                response = jsonify(None)
                 response.status_code = 500
         else:
             response = jsonify(None)
@@ -74,7 +74,7 @@ class AddProduct(Resource):
                 response = jsonify(res)
                 response.status_code = 200
             else:
-                response = jsonify({})
+                response = jsonify(None)
                 response.status_code = 500
         else:
             response = jsonify(None)
@@ -95,7 +95,7 @@ class EditQuantity(Resource):
                 response = jsonify(res)
                 response.status_code = 200
             else:
-                response = jsonify({})
+                response = jsonify(None)
                 response.status_code = 500
         else:
             response = jsonify(None)
@@ -117,7 +117,7 @@ class AddTransaction(Resource):
                 response = jsonify(res)
                 response.status_code = 200
             else:
-                response = jsonify({})
+                response = jsonify(None)
                 response.status_code = 500
         else:
             response = jsonify(None)
@@ -136,7 +136,7 @@ class GetAllProducts(Resource):
                 response = jsonify(res)
                 response.status_code = 200
             else:
-                response = jsonify({})
+                response = jsonify(None)
                 response.status_code = 500
         else:
             response = jsonify(None)
@@ -153,7 +153,7 @@ class GetAllTransactions(Resource):
                 response = jsonify(res)
                 response.status_code = 200
             else:
-                response = jsonify({})
+                response = jsonify(None)
                 response.status_code = 500
         else:
             response = jsonify(None)
@@ -173,7 +173,7 @@ class GetUserFromUsername(Resource):
                 response = jsonify(res)
                 response.status_code = 200
             else:
-                response = jsonify({})
+                response = jsonify(None)
                 response.status_code = 500
         else:
             response = jsonify(None)
@@ -193,7 +193,7 @@ class GetUserFromChatId(Resource):
                 response = jsonify(res)
                 response.status_code = 200
             else:
-                response = jsonify({})
+                response = jsonify(None)
                 response.status_code = 500
         else:
             response = jsonify(None)
@@ -212,7 +212,7 @@ class GetAllUsers(Resource):
                 response = jsonify(res)
                 response.status_code = 200
             else:
-                response = jsonify({})
+                response = jsonify(None)
                 response.status_code = 500
         else:
             response = jsonify(None)
@@ -223,8 +223,24 @@ class GetAllUsers(Resource):
 
 class GetAcquistiIn(Resource):
     def post(self, token):
+        data = request.get_json()
+        token = data['token']
+        user_id = data['data']['user_id']
+        start_date = data['data']['start_date']
+        end_date = data['data']['end_date']
         if checkToken(token):
-            return jsonify(dbm.getAcquistiIn())
+            res = dbm.getAcquistiIn(user_id, start_date, end_date)
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify(None)
+                response.status_code = 500
+        else:
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
 
 
 # TODO: add control to create record if doesn't exists
