@@ -2,6 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+import logging
+
 Base = declarative_base()
 
 
@@ -223,3 +225,73 @@ class DB_Manager():
             })
         return {'transactions': transactions} if transactions is not None else None
 
+    def backup(self):
+        from src.Configuration.Configure import Configuration
+        if Configuration().determine_env() == 'LocalTest':
+            logging.info('LocalTestMode: cannot backup')
+
+    def db_url_parser(self):
+        from os import environ
+        import gzip
+        from sh import pg_dump
+
+        db_url = environ['DATABASE_URL']
+        list = db_url.split('/')[2:]
+        user = list[0].split(':')[0]
+        port = list[0].split(':')[2]
+        host = list[0].split('@')[1].split(':')[0]
+        password = list[0].split(':')[1].split('@')[0]
+        db = list[1]
+
+        with gzip.open('backup.gz', 'wb') as backup:
+            pg_dump('--column-inserts', '-h', host, '-U', user, db, '-p', port, _out=backup)
+        return self.dropbox_upload('backup.gz')
+
+    def dropbox_upload(self, backup_file):
+        from datetime import date
+        from dropbox import Dropbox
+        from dropbox.exceptions import AuthError, ApiError
+        from dropbox.files import WriteMode
+        from os import environ, system
+
+        backup_path = '/backup' + str(date.today()) + '.gz'
+        dbx = Dropbox(environ['DROPBOX_API_KEY'])
+        logging.info('Uploading ' + backup_file + ' to Dropbox as ' + backup_path)
+
+        try:
+            dbx.users_get_current_account()
+        except AuthError:
+            logging.ERROR('Invalid dropbox token, cannot authenticate')
+            return None
+
+        self.remove_old_backups(dbx)
+
+        with open(backup_file, 'rb') as backup:
+            try:
+                logging.info('Uploading ' + backup_file + ' to Dropbox as ')
+                dbx.files_upload(backup.read(), backup_path, mode=WriteMode('overwrite'))
+                logging.info('Backup succeded!')
+                system('rm', backup_file)
+                return True
+            except ApiError as err:
+                if err.error.is_path() and err.error.get_path().reason.is_insufficient_space():
+                    logging.Error('No free space available to Dropbox, cannot backup')
+                    system('rm', backup_file)
+                    return None
+                elif err.user_message_text:
+                    logging.ERROR('Cannot backup: ' + err.user_message_text)
+                    return None
+                else:
+                    logging.ERROR(err)
+                    return None
+
+    def remove_old_backups(dbx):
+        from datetime import date
+        try:
+            current_year = date.today().year
+            dbx.files_delete('/backup' + date.today().replace(year=current_year-1) + '.gz')
+            logging.warning('Removed old backup')
+            return
+        except:
+            logging.info('No backup older than a year to be removed')
+            return

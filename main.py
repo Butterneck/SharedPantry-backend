@@ -263,42 +263,22 @@ class GetAcquistiIn(Resource):
         return response
 
 
-# TODO: add control to create record if doesn't exists
-class ActivateActivator(Resource):
-    def post(self, token):
+class Backup(Resource):
+    def post(self):
+        data = request.get_json()
+        token = data['token']
         if checkToken(token):
-            return jsonify(dbm.activateActivator())
+            res = dbm.backup()
+            response = jsonify(None)
+            if res is not None:
+                response.status_code = 200
+            else:
+                response.status_code = 500
+        else:
+            response = jsonify(None)
+            response.status_code = 403
 
-
-class DeactivateActivator(Resource):
-    def post(self, token):
-        if checkToken(token):
-            return jsonify(dbm.deactivateActivator())
-
-
-class CheckActivator(Resource):
-    def post(self, token):
-        if checkToken(token):
-            return jsonify(dbm.checkActivator())
-
-
-# TODO: add control to create record if doesn't exists
-class ActivateBackup(Resource):
-    def post(self, token):
-        if checkToken(token):
-            return jsonify(dbm.activateBackup())
-
-
-class DeactivateBackup(Resource):
-    def post(self, token):
-        if checkToken(token):
-            return jsonify(dbm.deactivateBackup())
-
-
-class CheckBackup(Resource):
-    def post(self, token):
-        if checkToken(token):
-            return jsonify(dbm.checkBackup())
+        return response
 
 
 api.add_resource(GetToken, '/getToken')
@@ -313,12 +293,7 @@ api.add_resource(GetUserFromChatId, '/getUserFromChatId')
 api.add_resource(GetAllUsers, '/getAllUsers')
 api.add_resource(GetAllAdmins, '/getAllAdmins')
 api.add_resource(GetAcquistiIn, '/getAcquistiIn')
-api.add_resource(ActivateActivator, '/activateActivator')
-api.add_resource(DeactivateActivator, '/deactivateActivator')
-api.add_resource(CheckActivator, '/checkActivator')
-api.add_resource(ActivateBackup, '/activateBackup')
-api.add_resource(DeactivateBackup, '/deactivateBackup')
-api.add_resource(CheckBackup, '/checkBackup')
+api.add_resource(Backup, '/backup')
 
 
 

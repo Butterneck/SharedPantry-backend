@@ -24,6 +24,7 @@ class Configuration():
             self.first_local_config(config)
         config.read_file(open('.config/config.ini'))
         db_url = "postgres://" + config['DB']['username'] + (":" + config['DB']['password'] if config['DB']['password'] != '' else '') + "@" + config['DB']['host'] + "/" + config['DB']['name']
+        environ['DATABASE_URL'] = db_url
         return DB_Manager(db_url)
 
     def first_local_config(self, config):
