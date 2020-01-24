@@ -43,8 +43,13 @@ class AddUser(Resource):
     def post(self):
         if checkToken(request):
             data = request.get_json()
-            username = data['username']
-            chat_id = data['chat_id']
+            try:
+                username = data['username']
+                chat_id = data['chat_id']
+            except KeyError:
+                response = jsonify(None)
+                response.status_code = 400
+                return response
             res = dbm.addUser(chat_id, username)
             if res is not None:
                 response = jsonify(res)
@@ -63,9 +68,14 @@ class AddProduct(Resource):
     def post(self):
         if checkToken(request):
             data = request.get_json()
-            name = data['name']
-            price = data['price']
-            quantity = data['quantity']
+            try:
+                name = data['name']
+                price = data['price']
+                quantity = data['quantity']
+            except KeyError:
+                response = jsonify(None)
+                response.status_code = 400
+                return response
             res = dbm.addProduct(name, price, quantity)
             if res is not None:
                 response = jsonify(res)
@@ -84,8 +94,13 @@ class EditQuantity(Resource):
     def post(self):
         if checkToken(request):
             data = request.get_json()
-            product_id = data['product_id']
-            quantity = data['quantity']
+            try:
+                product_id = data['product_id']
+                quantity = data['quantity']
+            except KeyError:
+                response = jsonify(None)
+                response.status_code = 400
+                return response
             res = dbm.editQuantity(product_id, quantity)
             if res is not None:
                 response = jsonify(res)
@@ -104,9 +119,14 @@ class AddTransaction(Resource):
     def post(self):
         if checkToken(request):
             data = request.get_json()
-            chat_id = data['chat_id']
-            product_id = data['product_id']
-            quantity = data['quantity']
+            try:
+                chat_id = data['chat_id']
+                product_id = data['product_id']
+                quantity = data['quantity']
+            except KeyError:
+                response = jsonify(None)
+                response.status_code = 400
+                return response
             res = dbm.addTransaction(chat_id, product_id, quantity)
             if res is not None:
                 response = jsonify(res)
@@ -159,7 +179,12 @@ class GetUserFromUsername(Resource):
     def post(self):
         if checkToken(request):
             data = request.get_json()
-            username = data['username']
+            try:
+                username = data['username']
+            except KeyError:
+                response = jsonify(None)
+                response.status_code = 400
+                return response
             res = dbm.getUserFromUsername(username)
             if res is not None:
                 response = jsonify(res)
@@ -178,7 +203,12 @@ class GetUserFromChatId(Resource):
     def post(self):
         if checkToken(request):
             data = request.get_json()
-            chat_id = data['chat_id']
+            try:
+                chat_id = data['chat_id']
+            except KeyError:
+                response = jsonify(None)
+                response.status_code = 400
+                return response
             res = dbm.getUserFromChatId(chat_id)
             if res is not None:
                 response = jsonify(res)
@@ -231,9 +261,14 @@ class GetAcquistiIn(Resource):
     def post(self):
         if checkToken(request):
             data = request.get_json()
-            user_id = data['user_id']
-            start_date = parse(data['start_date'])
-            end_date = parse(data['end_date'])
+            try:
+                user_id = data['user_id']
+                start_date = parse(data['start_date'])
+                end_date = parse(data['end_date'])
+            except KeyError:
+                response = jsonify(None)
+                response.status_code = 400
+                return response
             res = dbm.getAcquistiIn(user_id, start_date, end_date)
             if res is not None:
                 response = jsonify(res)
