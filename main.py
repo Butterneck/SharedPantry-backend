@@ -16,8 +16,8 @@ def createToken(bot_token):
         return None
 
 
-def checkToken(token):
-    return token == environ['BACKEND_TOKEN']
+def checkToken(request):
+    return request.headers.get('token') == environ['BACKEND_TOKEN']
 
 
 app = Flask(__name__)
@@ -29,9 +29,7 @@ dbm = Configuration().configure_local_test()
 
 class GetToken(Resource):
     def post(self):
-        data = request.get_json()
-        token = data['token']
-        res = createToken(token)
+        res = createToken(request.headers.get('token'))
         if res is not None:
             response = jsonify(res)
             response.status_code = 200
@@ -43,11 +41,10 @@ class GetToken(Resource):
 
 class AddUser(Resource):
     def post(self):
-        data = request.get_json()
-        token = data['token']
-        username = data['data']['username']
-        chat_id = data['data']['chat_id']
-        if checkToken(token):
+        if checkToken(request):
+            data = request.get_json()
+            username = data['username']
+            chat_id = data['chat_id']
             res = dbm.addUser(chat_id, username)
             if res is not None:
                 response = jsonify(res)
@@ -64,12 +61,11 @@ class AddUser(Resource):
 
 class AddProduct(Resource):
     def post(self):
-        data = request.get_json()
-        token = data['token']
-        name = data['data']['name']
-        price = data['data']['price']
-        quantity = data['data']['quantity']
-        if checkToken(token):
+        if checkToken(request):
+            data = request.get_json()
+            name = data['name']
+            price = data['price']
+            quantity = data['quantity']
             res = dbm.addProduct(name, price, quantity)
             if res is not None:
                 response = jsonify(res)
@@ -86,11 +82,10 @@ class AddProduct(Resource):
 
 class EditQuantity(Resource):
     def post(self):
-        data = request.get_json()
-        token = data['token']
-        product_id = data['data']['product_id']
-        quantity = data['data']['quantity']
-        if checkToken(token):
+        if checkToken(request):
+            data = request.get_json()
+            product_id = data['product_id']
+            quantity = data['quantity']
             res = dbm.editQuantity(product_id, quantity)
             if res is not None:
                 response = jsonify(res)
@@ -107,12 +102,11 @@ class EditQuantity(Resource):
 
 class AddTransaction(Resource):
     def post(self):
-        data = request.get_json()
-        token = data['token']
-        chat_id = data['data']['chat_id']
-        product_id = data['data']['product_id']
-        quantity = data['data']['quantity']
-        if checkToken(token):
+        if checkToken(request):
+            data = request.get_json()
+            chat_id = data['chat_id']
+            product_id = data['product_id']
+            quantity = data['quantity']
             res = dbm.addTransaction(chat_id, product_id, quantity)
             if res is not None:
                 response = jsonify(res)
@@ -129,9 +123,7 @@ class AddTransaction(Resource):
 
 class GetAllProducts(Resource):
     def post(self):
-        data = request.get_json()
-        token = data['token']
-        if checkToken(token):
+        if checkToken(request):
             res = dbm.getAllProducts()
             if res is not None:
                 response = jsonify(res)
@@ -147,8 +139,8 @@ class GetAllProducts(Resource):
 
 
 class GetAllTransactions(Resource):
-    def post(self, token):
-        if checkToken(token):
+    def post(self):
+        if checkToken(request):
             res = dbm.getAllTransactions()
             if res is not None:
                 response = jsonify(res)
@@ -165,10 +157,9 @@ class GetAllTransactions(Resource):
 
 class GetUserFromUsername(Resource):
     def post(self):
-        data = request.get_json()
-        token = data['token']
-        username = data['data']['username']
-        if checkToken(token):
+        if checkToken(request):
+            data = request.get_json()
+            username = data['username']
             res = dbm.getUserFromUsername(username)
             if res is not None:
                 response = jsonify(res)
@@ -185,10 +176,9 @@ class GetUserFromUsername(Resource):
 
 class GetUserFromChatId(Resource):
     def post(self):
-        data = request.get_json()
-        token = data['token']
-        chat_id = data['data']['chat_id']
-        if checkToken(token):
+        if checkToken(request):
+            data = request.get_json()
+            chat_id = data['chat_id']
             res = dbm.getUserFromChatId(chat_id)
             if res is not None:
                 response = jsonify(res)
@@ -205,9 +195,7 @@ class GetUserFromChatId(Resource):
 
 class GetAllUsers(Resource):
     def post(self):
-        data = request.get_json()
-        token = data['token']
-        if checkToken(token):
+        if checkToken(request):
             res = dbm.getAllUsers()
             if res is not None:
                 response = jsonify(res)
@@ -224,9 +212,7 @@ class GetAllUsers(Resource):
 
 class GetAllAdmins(Resource):
     def post(self):
-        data = request.get_json()
-        token = data['token']
-        if checkToken(token):
+        if checkToken(request):
             res = dbm.getAllAdmins()
             if res is not None:
                 response = jsonify(res)
@@ -243,12 +229,11 @@ class GetAllAdmins(Resource):
 
 class GetAcquistiIn(Resource):
     def post(self):
-        data = request.get_json()
-        token = data['token']
-        user_id = data['data']['user_id']
-        start_date = parse(data['data']['start_date'])
-        end_date = parse(data['data']['end_date'])
-        if checkToken(token):
+        if checkToken(request):
+            data = request.get_json()
+            user_id = data['user_id']
+            start_date = parse(data['start_date'])
+            end_date = parse(data['end_date'])
             res = dbm.getAcquistiIn(user_id, start_date, end_date)
             if res is not None:
                 response = jsonify(res)
@@ -265,9 +250,7 @@ class GetAcquistiIn(Resource):
 
 class Backup(Resource):
     def post(self):
-        data = request.get_json()
-        token = data['token']
-        if checkToken(token):
+        if checkToken(request):
             res = dbm.backup()
             response = jsonify(None)
             if res is not None:
