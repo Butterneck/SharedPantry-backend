@@ -16,8 +16,6 @@ class DB_Manager():
         from src.DBClasses.User import User as User
         from src.DBClasses.Product import Product
         from src.DBClasses.Transaction import Transaction
-        from src.DBClasses.Activator import Activator
-        from src.DBClasses.Backup import Backup
         from src.DBClasses.Debit import Debit
 
         # Creating schema
