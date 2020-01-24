@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_restful import Resource, Api
 from src.Configuration.Configure import Configuration
+from dateutil.parser import parse
 
 
 def createToken(bot_token):
@@ -221,13 +222,32 @@ class GetAllUsers(Resource):
         return response
 
 
+class GetAllAdmins(Resource):
+    def post(self):
+        data = request.get_json()
+        token = data['token']
+        if checkToken(token):
+            res = dbm.getAllAdmins()
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify(None)
+                response.status_code = 500
+        else:
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
+
+
 class GetAcquistiIn(Resource):
-    def post(self, token):
+    def post(self):
         data = request.get_json()
         token = data['token']
         user_id = data['data']['user_id']
-        start_date = data['data']['start_date']
-        end_date = data['data']['end_date']
+        start_date = parse(data['data']['start_date'])
+        end_date = parse(data['data']['end_date'])
         if checkToken(token):
             res = dbm.getAcquistiIn(user_id, start_date, end_date)
             if res is not None:
@@ -291,6 +311,7 @@ api.add_resource(GetAllTransactions, '/getAllTransactions')
 api.add_resource(GetUserFromUsername, '/getUserFromUsername')
 api.add_resource(GetUserFromChatId, '/getUserFromChatId')
 api.add_resource(GetAllUsers, '/getAllUsers')
+api.add_resource(GetAllAdmins, '/getAllAdmins')
 api.add_resource(GetAcquistiIn, '/getAcquistiIn')
 api.add_resource(ActivateActivator, '/activateActivator')
 api.add_resource(DeactivateActivator, '/deactivateActivator')

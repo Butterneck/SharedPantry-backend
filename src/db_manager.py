@@ -152,7 +152,19 @@ class DB_Manager():
                 'username': user.username,
                 'is_admin': user.is_admin
             })
-        return {'users': users}  if users is not None else None
+        return {'users': users} if users is not None else None
+
+    def getAllAdmins(self):
+        from src.DBClasses.User import User
+        session = self.Session()
+        admins = []
+        for admin in session.query(User).filter_by(is_admin=True):
+            admins.append({
+                'chat_id': admin.chat_id,
+                'username': admin.username,
+                'is_admin': admin.is_admin
+            })
+        return {'admins': admins} if admins is not None else None
 
     def activateActivator(self):
         from src.DBClasses.Activator import Activator
@@ -201,6 +213,13 @@ class DB_Manager():
     def getAcquistiIn(self, user_id, startDate, endDate):
         from src.DBClasses.Transaction import Transaction
         session = self.Session()
-        transactions = session.query(Transaction).filter_by(user_id=user_id).filter(Transaction.date >= startDate).filter(Transaction.date <= endDate).all()
+        transactions = []
+        for transaction in session.query(Transaction).filter_by(user_id=user_id).filter(Transaction.date >= startDate).filter(Transaction.date <= endDate).all():
+            transactions.append({
+                'user_id': transaction.user_id,
+                'product_id': transaction.product_id,
+                'date': str(transaction.date),
+                'quantity': str(transaction.quantity)
+            })
         return {'transactions': transactions} if transactions is not None else None
 
