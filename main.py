@@ -317,7 +317,7 @@ class EditUserAdmin(Resource):
                 response = jsonify(None)
                 response.status_code = 400
                 return response
-            res = dbm.editProductName(chat_id)
+            res = dbm.editUserAdmin(chat_id)
             if res is not None:
                 response = jsonify(res)
                 response.status_code = 200
@@ -342,7 +342,7 @@ class EditUserName(Resource):
                 response = jsonify(None)
                 response.status_code = 400
                 return response
-            res = dbm.editProductName(chat_id, username)
+            res = dbm.editUserName(chat_id, username)
             if res is not None:
                 response = jsonify(res)
                 response.status_code = 200
