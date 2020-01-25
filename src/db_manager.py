@@ -195,6 +195,32 @@ class DB_Manager():
             })
         return {'admins': admins} if admins is not None else None
 
+    def editUserName(self, caht_id, username):
+        from src.DBClasses.User import User
+        session = self.Session()
+        user = session.query(User).filter_by(chat_id=caht_id).first()
+        user.username = username
+        session.commit()
+        return {'user': {
+            'chat_id': user.chat_id,
+            'username': user.username,
+            'is_admin': user.is_admin
+            }
+        } if user is not None else None
+
+    def editUserAdmin(self, caht_id):
+        from src.DBClasses.User import User
+        session = self.Session()
+        user = session.query(User).filter_by(chat_id=caht_id).first()
+        user.is_admin = not user.is_admin
+        session.commit()
+        return {'user': {
+            'chat_id': user.chat_id,
+            'username': user.username,
+            'is_admin': user.is_admin
+            }
+        } if user is not None else None
+
     def activateActivator(self):
         from src.DBClasses.Activator import Activator
         session = self.Session()

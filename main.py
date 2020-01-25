@@ -307,6 +307,55 @@ class GetAllAdmins(Resource):
         return response
 
 
+class EditUserAdmin(Resource):
+    def post(self):
+        if checkToken(request):
+            data = request.get_json()
+            try:
+                chat_id = data['chat_id']
+            except KeyError:
+                response = jsonify(None)
+                response.status_code = 400
+                return response
+            res = dbm.editProductName(chat_id)
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify(None)
+                response.status_code = 500
+        else:
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
+
+
+class EditUserName(Resource):
+    def post(self):
+        if checkToken(request):
+            data = request.get_json()
+            try:
+                chat_id = data['chat_id']
+                username = data['username']
+            except KeyError:
+                response = jsonify(None)
+                response.status_code = 400
+                return response
+            res = dbm.editProductName(chat_id, username)
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify(None)
+                response.status_code = 500
+        else:
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
+
+
 class GetAcquistiIn(Resource):
     def post(self):
         if checkToken(request):
@@ -355,6 +404,8 @@ api.add_resource(AddProduct, '/addProduct')
 api.add_resource(EditProductQuantity, '/editProductQuantity')
 api.add_resource(EditProductName, '/editProductName')
 api.add_resource(EditProductPrice, '/editProductPrice')
+api.add_resource(EditUserName, '/editUserName')
+api.add_resource(EditUserAdmin, '/editUserAdmin')
 api.add_resource(AddTransaction, '/addTransaction')
 api.add_resource(GetAllProducts, '/getAllProducts')
 api.add_resource(GetAllTransactions, '/getAllTransactions')
