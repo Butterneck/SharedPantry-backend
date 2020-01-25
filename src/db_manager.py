@@ -221,50 +221,6 @@ class DB_Manager():
             }
         } if user is not None else None
 
-    def activateActivator(self):
-        from src.DBClasses.Activator import Activator
-        session = self.Session()
-        activator = session.query(Activator).first()
-        activator.activator = True
-        session.commit()
-        return {'activator': activator.activator}  if activator is not None else None
-
-    def deactivateActivator(self):
-        from src.DBClasses.Activator import Activator
-        session = self.Session()
-        activator = session.query(Activator).first()
-        activator.activator = False
-        session.commit()
-        return {'activator': activator.activator} if activator is not None else None
-
-    def checkActivator(self):
-        from src.DBClasses.Activator import Activator
-        session = self.Session()
-        activator = session.query(Activator).first()
-        return {'activator': activator.activator} if activator is not None else None
-
-    def activateBackup(self):
-        from src.DBClasses.Backup import Backup
-        session = self.Session()
-        backup= session.query(Backup).first()
-        backup.backup = True
-        session.commit()
-        return {'backup': backup.backup} if backup is not None else None
-
-    def deactivateBackup(self):
-        from src.DBClasses.Backup import Backup
-        session = self.Session()
-        backup = session.query(Backup).first()
-        backup.backup = False
-        session.commit()
-        return {'backup': backup.backup} if backup is not None else None
-
-    def checkBackup(self):
-        from src.DBClasses.Backup import Backup
-        session = self.Session()
-        backup = session.query(Backup).first()
-        return {'backup': backup.backup} if backup is not None else None
-
     def getAcquistiIn(self, user_id, startDate, endDate):
         from src.DBClasses.Transaction import Transaction
         session = self.Session()
