@@ -90,7 +90,7 @@ class AddProduct(Resource):
         return response
 
 
-class EditQuantity(Resource):
+class EditProductQuantity(Resource):
     def post(self):
         if checkToken(request):
             data = request.get_json()
@@ -101,7 +101,57 @@ class EditQuantity(Resource):
                 response = jsonify(None)
                 response.status_code = 400
                 return response
-            res = dbm.editQuantity(product_id, quantity)
+            res = dbm.editProductQuantity(product_id, quantity)
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify(None)
+                response.status_code = 500
+        else:
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
+
+
+class EditProductName(Resource):
+    def post(self):
+        if checkToken(request):
+            data = request.get_json()
+            try:
+                product_id = data['product_id']
+                name = data['name']
+            except KeyError:
+                response = jsonify(None)
+                response.status_code = 400
+                return response
+            res = dbm.editProductName(product_id, name)
+            if res is not None:
+                response = jsonify(res)
+                response.status_code = 200
+            else:
+                response = jsonify(None)
+                response.status_code = 500
+        else:
+            response = jsonify(None)
+            response.status_code = 403
+
+        return response
+
+
+class EditProductPrice(Resource):
+    def post(self):
+        if checkToken(request):
+            data = request.get_json()
+            try:
+                product_id = data['product_id']
+                price = data['price']
+            except KeyError:
+                response = jsonify(None)
+                response.status_code = 400
+                return response
+            res = dbm.editProductPrice(product_id, price)
             if res is not None:
                 response = jsonify(res)
                 response.status_code = 200
@@ -302,7 +352,9 @@ class Backup(Resource):
 api.add_resource(GetToken, '/getToken')
 api.add_resource(AddUser, '/addUser')
 api.add_resource(AddProduct, '/addProduct')
-api.add_resource(EditQuantity, '/editQuantity')
+api.add_resource(EditProductQuantity, '/editProductQuantity')
+api.add_resource(EditProductName, '/editProductName')
+api.add_resource(EditProductPrice, '/editProductPrice')
 api.add_resource(AddTransaction, '/addTransaction')
 api.add_resource(GetAllProducts, '/getAllProducts')
 api.add_resource(GetAllTransactions, '/getAllTransactions')

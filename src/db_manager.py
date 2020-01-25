@@ -49,7 +49,7 @@ class DB_Manager():
             }
         }
 
-    def editQuantity(self, product_id, qt):
+    def editProductQuantity(self, product_id, qt):
         from src.DBClasses.Product import Product
         session = self.Session()
         product = session.query(Product).filter_by(id=product_id).first()
@@ -58,7 +58,36 @@ class DB_Manager():
         return {'product': {
             'id': product.id,
             'name': product.name,
-            'quantity': product.quantity
+            'quantity': product.quantity,
+            'price': product.price
+            }
+        } if product is not None else None
+
+    def editProductName(self, product_id, name):
+        from src.DBClasses.Product import Product
+        session = self.Session()
+        product = session.query(Product).filter_by(id=product_id).first()
+        product.name = name
+        session.commit()
+        return {'product': {
+            'id': product.id,
+            'name': product.name,
+            'quantity': product.quantity,
+            'price': product.price
+            }
+        } if product is not None else None
+
+    def editProductPrice(self, product_id, price):
+        from src.DBClasses.Product import Product
+        session = self.Session()
+        product = session.query(Product).filter_by(id=product_id).first()
+        product.price = price
+        session.commit()
+        return {'product': {
+            'id': product.id,
+            'name': product.name,
+            'quantity': product.quantity,
+            'price': product.price
             }
         } if product is not None else None
 
