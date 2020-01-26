@@ -24,7 +24,7 @@ app = Flask(__name__)
 CORS(app)
 api = Api(app)
 
-dbm = Configuration().configure_local_test()
+dbm = Configuration().configure()
 
 
 class GetToken(Resource):
