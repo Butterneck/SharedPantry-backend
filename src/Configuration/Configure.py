@@ -7,7 +7,7 @@ from configparser import ConfigParser
 class Configuration():
 
     def determine_env(self):
-        if "TOKEN" in environ:
+        if "PRODUCTION" in environ:
             logging.info("Running in production mode")
             return "Production"
         else:
