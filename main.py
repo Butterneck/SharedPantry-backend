@@ -19,6 +19,7 @@ def createToken(bot_token):
 
 
 def checkToken(request):
+    logging.info('checking token')
     global backend_token
     logging.info('token received: ' + request.headers.get('token'))
     logging.info('reference token: ' + backend_token)
