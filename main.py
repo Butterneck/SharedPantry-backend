@@ -11,7 +11,6 @@ def createToken(bot_token):
     if environ['BOT_TOKEN'] == bot_token:
         token = token_urlsafe()
         environ['BACKEND_TOKEN'] = token
-        print(environ['BACKEND_TOKEN'])
         return {'token': token}
     else:
         return None
