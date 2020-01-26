@@ -119,7 +119,7 @@ class DB_Manager():
         from src.DBClasses.Product import Product
         session = self.Session()
         current_quantity = session.query(Product).filter_by(id=product_id).first().quantity
-        self.editQuantity(product_id, current_quantity - 1)
+        self.editProductQuantity(product_id, current_quantity - 1)
 
     def getAllProducts(self):
         from src.DBClasses.Product import Product
