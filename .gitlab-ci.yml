@@ -1,0 +1,13 @@
+image: alpine:latest
+
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  script:
+    - apk add ruby-dev ruby-rdoc git curl
+    - gem install dpl
+    - dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
+  only:
+    - master
