@@ -45,7 +45,8 @@ class DB_Manager():
         return {'product': {
             'id': product.id,
             'name': product.name,
-            'quantity': product.quantity
+            'quantity': product.quantity,
+            'price': product.price
             }
         }
 
@@ -208,10 +209,10 @@ class DB_Manager():
             }
         } if user is not None else None
 
-    def editUserAdmin(self, caht_id):
+    def editUserAdmin(self, chat_id):
         from src.DBClasses.User import User
         session = self.Session()
-        user = session.query(User).filter_by(chat_id=caht_id).first()
+        user = session.query(User).filter_by(chat_id=chat_id).first()
         user.is_admin = not user.is_admin
         session.commit()
         return {'user': {
