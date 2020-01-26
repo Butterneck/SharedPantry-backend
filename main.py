@@ -4,7 +4,6 @@ from flask_cors import CORS
 from flask_restful import Resource, Api
 from src.Configuration.Configure import Configuration
 from dateutil.parser import parse
-import logging
 
 
 def createToken(bot_token):
@@ -12,7 +11,7 @@ def createToken(bot_token):
     if environ['BOT_TOKEN'] == bot_token:
         token = token_urlsafe()
         environ['BACKEND_TOKEN'] = token
-        logging.debug(environ['BACKEND_TOKEN'])
+        print(environ['BACKEND_TOKEN'])
         return {'token': token}
     else:
         return None
