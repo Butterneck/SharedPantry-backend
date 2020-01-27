@@ -5,7 +5,7 @@ from flask_restful import Resource, Api
 from src.Configuration.Configure import Configuration
 from dateutil.parser import parse
 
-backend_token = ''
+global backend_token
 
 def createToken(bot_token):
     from secrets import token_urlsafe
