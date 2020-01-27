@@ -5,24 +5,20 @@ from flask_restful import Resource, Api
 from src.Configuration.Configure import Configuration
 from dateutil.parser import parse
 
-global backend_token
 
 def createToken(bot_token):
     from secrets import token_urlsafe
     if environ['BOT_TOKEN'] == bot_token:
-        global backend_token
-        backend_token = token_urlsafe()
-        return {'token': backend_token}
+        token = token_urlsafe()
+        environ['BACKEND_TOKEN'] = token
+        return {'token': token}
     else:
         return None
 
 
 def checkToken(request):
-    print('checking token')
-    global backend_token
-    print('token received: ' + request.headers.get('token'))
-    print('reference token: ' + backend_token)
-    return request.headers.get('token') == backend_token
+    print(environ['BACKEND_TOKEN'])
+    return request.headers.get('token') == environ['BACKEND_TOKEN']
 
 
 app = Flask(__name__)
