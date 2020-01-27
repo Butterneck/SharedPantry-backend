@@ -4,7 +4,6 @@ from flask_cors import CORS
 from flask_restful import Resource, Api
 from src.Configuration.Configure import Configuration
 from dateutil.parser import parse
-import logging
 
 backend_token = ''
 
@@ -19,10 +18,10 @@ def createToken(bot_token):
 
 
 def checkToken(request):
-    logging.info('checking token')
+    print('checking token')
     global backend_token
-    logging.info('token received: ' + request.headers.get('token'))
-    logging.info('reference token: ' + backend_token)
+    print('token received: ' + request.headers.get('token'))
+    print('reference token: ' + backend_token)
     return request.headers.get('token') == backend_token
 
 
