@@ -6,6 +6,7 @@ from src.Configuration.Configure import Configuration
 from dateutil.parser import parse
 
 global backend_token
+backend_token = ''
 
 
 def createToken(bot_token):
