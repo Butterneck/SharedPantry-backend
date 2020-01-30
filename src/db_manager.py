@@ -30,6 +30,7 @@ class DB_Manager():
         session = self.Session()
         session.add(user)
         session.commit()
+        session.close()
         return {'user': {
             'id': user.chat_id,
             'username': user.username
@@ -42,6 +43,7 @@ class DB_Manager():
         session = self.Session()
         session.add(product)
         session.commit()
+        session.close()
         return {'product': {
             'id': product.id,
             'name': product.name,
@@ -56,6 +58,7 @@ class DB_Manager():
         product = session.query(Product).filter_by(id=product_id).first()
         product.quantity = qt
         session.commit()
+        session.close()
         return {'product': {
             'id': product.id,
             'name': product.name,
@@ -70,6 +73,7 @@ class DB_Manager():
         product = session.query(Product).filter_by(id=product_id).first()
         product.name = name
         session.commit()
+        session.close()
         return {'product': {
             'id': product.id,
             'name': product.name,
@@ -84,6 +88,7 @@ class DB_Manager():
         product = session.query(Product).filter_by(id=product_id).first()
         product.price = price
         session.commit()
+        session.close()
         return {'product': {
             'id': product.id,
             'name': product.name,
@@ -102,6 +107,7 @@ class DB_Manager():
         session = self.Session()
         session.add(transaction)
         session.commit()
+        session.close()
         return {'transaction': {
             'user_id': transaction.user_id,
             'product_id': transaction.product_id,
@@ -113,12 +119,15 @@ class DB_Manager():
     def checkAvailability(self, product_id):
         from src.DBClasses.Product import Product
         session = self.Session()
-        return session.query(Product).filter_by(id=product_id).first().quantity
+        quantity = session.query(Product).filter_by(id=product_id).first().quantity
+        session.close()
+        return quantity
 
     def pick_up(self, product_id):
         from src.DBClasses.Product import Product
         session = self.Session()
         current_quantity = session.query(Product).filter_by(id=product_id).first().quantity
+        session.close()
         self.editProductQuantity(product_id, current_quantity - 1)
 
     def getAllProducts(self):
@@ -132,6 +141,7 @@ class DB_Manager():
                 'price': product.price,
                 'quantity': product.quantity
             })
+        session.close()
         return {'products': products} if products is not None else None
 
     def getAllTransactions(self):
@@ -145,12 +155,14 @@ class DB_Manager():
                 'date': transaction.date,
                 'quantity': transaction.quantity
             })
+        session.close()
         return {'transactions': transactions} if transactions is not None else None
 
     def getUserFromUsername(self, username):
         from src.DBClasses.User import User
         session = self.Session()
         user = session.query(User).filter_by(username=username).first()
+        session.close()
         return {'user': {
                 'chat_id': user.chat_id,
                 'username': user.username,
@@ -162,6 +174,7 @@ class DB_Manager():
         from src.DBClasses.User import User
         session = self.Session()
         user = session.query(User).filter_by(chat_id=chat_id).first()
+        session.close()
         if user is not None:
             return {'user': {
                     'chat_id': user.chat_id,
@@ -182,6 +195,7 @@ class DB_Manager():
                 'username': user.username,
                 'is_admin': user.is_admin
             })
+        session.close()
         return {'users': users} if users is not None else None
 
     def getAllAdmins(self):
@@ -194,6 +208,7 @@ class DB_Manager():
                 'username': admin.username,
                 'is_admin': admin.is_admin
             })
+        session.close()
         return {'admins': admins} if admins is not None else None
 
     def editUserName(self, caht_id, username):
@@ -202,6 +217,7 @@ class DB_Manager():
         user = session.query(User).filter_by(chat_id=caht_id).first()
         user.username = username
         session.commit()
+        session.close()
         return {'user': {
             'chat_id': user.chat_id,
             'username': user.username,
@@ -215,6 +231,7 @@ class DB_Manager():
         user = session.query(User).filter_by(chat_id=chat_id).first()
         user.is_admin = not user.is_admin
         session.commit()
+        session.close()
         return {'user': {
             'chat_id': user.chat_id,
             'username': user.username,
@@ -233,6 +250,7 @@ class DB_Manager():
                 'date': str(transaction.date),
                 'quantity': str(transaction.quantity)
             })
+        session.close()
         return {'transactions': transactions} if transactions is not None else None
 
     def backup(self):
