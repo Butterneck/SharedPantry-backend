@@ -1,16 +1,15 @@
-from sqlalchemy import Column, Integer, DateTime, ForeignKey
-from src.db_manager import Base
+from main import db
 
 
-class Transaction(Base):
+class Transaction(db.Model):
 
     __tablename__ = 'Transactions'
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('Users.chat_id'), nullable=False)
-    product_id = Column(Integer, ForeignKey('Products.id'), nullable=False)
-    date = Column(DateTime, nullable=False)
-    quantity = Column(Integer, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.chat_id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('Products.id'), nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
 
 
     def __init__(self, user_id, product_id, date, quantity):

@@ -1,15 +1,14 @@
-from sqlalchemy import Column, Integer, String
-from src.db_manager import Base
+from main import db
 
 
-class Product(Base):
+class Product(db.Model):
 
     __tablename__ = 'Products'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    price = Column(Integer, nullable=False)
-    quantity = Column(Integer, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
 
 
     def __init__(self, name, price, quantity):

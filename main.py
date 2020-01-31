@@ -6,6 +6,7 @@ from src.Configuration.Configure import Configuration
 from dateutil.parser import parse
 import jwt
 from functools import wraps
+from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
@@ -16,7 +17,11 @@ app.config['BOT_TOKEN'] = environ['BOT_TOKEN']
 app.config['SECRET_KEY'] = environ['SECRET_KEY']
 
 
-dbm = Configuration().configure()
+app.config['SQLALCHEMY_DATABASE_URI'] = Configuration().configure()
+db = SQLAlchemy(app)
+db.create_all()
+
+import src.db_manager as dbm
 
 
 def token_required(f):

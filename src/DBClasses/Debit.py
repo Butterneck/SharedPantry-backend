@@ -1,13 +1,11 @@
-from sqlalchemy import Column, Integer, Boolean, ForeignKey
-from src.db_manager import Base
+from main import db
 
-
-class Debit(Base):
+class Debit(db.Model):
 
     __tablename__ = 'Debits'
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('Users.chat_id'))
-    quantity = Column(Integer, nullable=False)
-    month = Column(Integer, nullable=False)
-    paid = Column(Boolean, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.chat_id'))
+    quantity = db.Column(db.Integer, nullable=False)
+    month = db.Column(db.Integer, nullable=False)
+    paid = db.Column(db.Boolean, nullable=False)

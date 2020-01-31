@@ -1,6 +1,5 @@
 import logging
 from os import environ, path
-from src.db_manager import DB_Manager
 from configparser import ConfigParser
 
 
@@ -16,7 +15,7 @@ class Configuration():
 
     def configure_production(self):
         db_url = environ['DATABASE_URL']
-        return DB_Manager(db_url)
+        return db_url
 
     def configure_local_test(self):
         config = ConfigParser()
@@ -25,7 +24,7 @@ class Configuration():
         config.read_file(open('.config/config.ini'))
         db_url = "postgres://" + config['DB']['username'] + (":" + config['DB']['password'] if config['DB']['password'] != '' else '') + "@" + config['DB']['host'] + "/" + config['DB']['name']
         environ['DATABASE_URL'] = db_url
-        return DB_Manager(db_url)
+        return db_url
 
     def first_local_config(self, config):
         print("This is the first time you run this bot in LocalTest mode, let's config the environment:")

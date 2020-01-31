@@ -1,14 +1,13 @@
-from sqlalchemy import Column, Integer, String, Boolean
-from src.db_manager import Base
+from main import db
 
 
-class User(Base):
+class User(db.Model):
 
     __tablename__ = 'Users'
 
-    chat_id = Column(Integer, primary_key=True)
-    username = Column(String, nullable=False, unique=True)
-    is_admin = Column(Boolean)
+    chat_id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, nullable=False, unique=True)
+    is_admin = db.Column(db.Boolean)
 
     def __init__(self, chat_id, username):
         self.chat_id = chat_id
