@@ -318,6 +318,28 @@ class EditUserAdmin(Resource):
         return response
 
 
+class UpdateUserLang(Resource):
+    @token_required
+    def post(self):
+        data = request.get_json()
+        try:
+            chat_id = data['chat_id']
+            lang = data['lang']
+        except KeyError:
+            response = jsonify(None)
+            response.status_code = 400
+            return response
+        res = dbm.editUserLang(chat_id, lang)
+        if res is not None:
+            response = jsonify(res)
+            response.status_code = 200
+        else:
+            response = jsonify(None)
+            response.status_code = 500
+
+        return response
+
+
 class EditUserName(Resource):
     @token_required
     def post(self):
@@ -392,6 +414,7 @@ api.add_resource(GetUserFromChatId, '/api/getUserFromChatId')
 api.add_resource(GetAllUsers, '/api/getAllUsers')
 api.add_resource(GetAllAdmins, '/api/getAllAdmins')
 api.add_resource(GetAcquistiIn, '/api/getAcquistiIn')
+api.add_resource(UpdateUserLang, '/api/updateUserLang')
 api.add_resource(Backup, '/api/backup')
 
 

@@ -199,6 +199,19 @@ def editUserAdmin(chat_id):
         }
     } if user is not None else None
 
+def editUserLang(chat_id, lang):
+    from src.DBClasses.User import User
+    user = User.query.filter_by(chat_id=chat_id).first()
+    user.lang = lang
+    db.session.commit()
+    return {'user': {
+        'chat_id': user.chat_id,
+        'username': user.username,
+        'lang': user.lang,
+        'is_admin': user.is_admin
+        }
+    } if user is not None else None
+
 def getAcquistiIn(user_id, startDate, endDate):
     from src.DBClasses.Transaction import Transaction
     transactions = []
