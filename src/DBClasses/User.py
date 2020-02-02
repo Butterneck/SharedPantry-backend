@@ -10,8 +10,8 @@ class User(db.Model):
     lang = db.Column(db.String, nullable=False, default='en')
     is_admin = db.Column(db.Boolean)
 
-    def __init__(self, chat_id, username, lang):
+    def __init__(self, chat_id, username, lang, is_admin):
         self.chat_id = chat_id
         self.username = username,
         self.lang = lang,
-        self.is_admin = False
+        self.is_admin = is_admin

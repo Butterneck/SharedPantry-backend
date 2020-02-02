@@ -9,7 +9,7 @@ from src.DBClasses.Debit import Debit
 
 def addUser(chat_id, username, lang, is_admin):
     from src.DBClasses.User import User as User
-    user = User(chat_id, username, lang)
+    user = User(chat_id, username, lang, is_admin)
     db.session.add(user)
     db.session.commit()
     return {'user': {
