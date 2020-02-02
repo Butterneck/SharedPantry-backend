@@ -20,6 +20,7 @@ app.config['SECRET_KEY'] = environ['SECRET_KEY']
 app.config['SQLALCHEMY_DATABASE_URI'] = Configuration().configure()
 db = SQLAlchemy(app)
 db.create_all()
+db.session.commit()
 
 import src.db_manager as dbm
 
