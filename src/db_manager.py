@@ -7,7 +7,7 @@ from src.DBClasses.Transaction import Transaction
 from src.DBClasses.Debit import Debit
 
 
-def addUser(chat_id, username, lang):
+def addUser(chat_id, username, lang, is_admin):
     from src.DBClasses.User import User as User
     user = User(chat_id, username, lang)
     db.session.add(user)
@@ -15,7 +15,8 @@ def addUser(chat_id, username, lang):
     return {'user': {
         'id': user.chat_id,
         'username': user.username,
-        'lang': user.lang
+        'lang': user.lang,
+        'isAdmin': is_admin
         }
     }
 

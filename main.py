@@ -71,11 +71,12 @@ class AddUser(Resource):
             username = data['username']
             chat_id = data['chat_id']
             lang = data['lang']
+            is_admin = data['is_admin']
         except KeyError:
             response = jsonify(None)
             response.status_code = 400
             return response
-        res = dbm.addUser(chat_id, username, lang)
+        res = dbm.addUser(chat_id, username, lang, is_admin)
         if res is not None:
             response = jsonify(res)
             response.status_code = 200
