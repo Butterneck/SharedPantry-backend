@@ -19,8 +19,6 @@ app.config['SECRET_KEY'] = environ['SECRET_KEY']
 
 app.config['SQLALCHEMY_DATABASE_URI'] = Configuration().configure()
 db = SQLAlchemy(app)
-db.create_all()
-db.session.commit()
 
 import src.db_manager as dbm
 
@@ -418,6 +416,12 @@ api.add_resource(GetAcquistiIn, '/api/getAcquistiIn')
 api.add_resource(UpdateUserLang, '/api/updateUserLang')
 api.add_resource(Backup, '/api/backup')
 
+
+from src.DBClasses.User import User
+from src.DBClasses.Product import Product
+from src.DBClasses.Transaction import Transaction
+db.create_all()
+db.session.commit()
 
 
 if __name__ == '__main__':
