@@ -7,14 +7,15 @@ from src.DBClasses.Transaction import Transaction
 from src.DBClasses.Debit import Debit
 
 
-def addUser(chat_id, username):
+def addUser(chat_id, username, lang):
     from src.DBClasses.User import User as User
-    user = User(chat_id, username)
+    user = User(chat_id, username, lang)
     db.session.add(user)
     db.session.commit()
     return {'user': {
         'id': user.chat_id,
-        'username': user.username
+        'username': user.username,
+        'lang': user.lang
         }
     }
 
@@ -129,6 +130,7 @@ def getUserFromUsername(username):
     return {'user': {
             'chat_id': user.chat_id,
             'username': user.username,
+            'lang': user.lang,
             'is_admin': user.is_admin
         }
     } if user is not None else None
@@ -140,6 +142,7 @@ def getUserFromChatId(chat_id):
         return {'user': {
                 'chat_id': user.chat_id,
                 'username': user.username,
+                'lang': user.lang,
                 'is_admin': user.is_admin
             }
         }
@@ -153,6 +156,7 @@ def getAllUsers():
         users.append({
             'chat_id': user.chat_id,
             'username': user.username,
+            'lang': user.lang,
             'is_admin': user.is_admin
         })
     return {'users': users} if users is not None else None
@@ -164,6 +168,7 @@ def getAllAdmins():
         admins.append({
             'chat_id': admin.chat_id,
             'username': admin.username,
+            'lang': admin.lang,
             'is_admin': admin.is_admin
         })
     return {'admins': admins} if admins is not None else None
@@ -176,6 +181,7 @@ def editUserName(caht_id, username):
     return {'user': {
         'chat_id': user.chat_id,
         'username': user.username,
+        'lang': user.lang,
         'is_admin': user.is_admin
         }
     } if user is not None else None
@@ -188,6 +194,7 @@ def editUserAdmin(chat_id):
     return {'user': {
         'chat_id': user.chat_id,
         'username': user.username,
+        'lang': user.lang,
         'is_admin': user.is_admin
         }
     } if user is not None else None
