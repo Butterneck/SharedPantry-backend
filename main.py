@@ -385,6 +385,20 @@ class GetAcquistiIn(Resource):
         return response
 
 
+class GetAllTransactionsFrequency(Resource):
+    @token_required
+    def post(self):
+        res = dbm.getAllTransactionsFrequency()
+        if res is not None:
+            response = jsonify(res)
+            response.status_code = 200
+        else:
+            response = jsonify(None)
+            response.status_code = 500
+
+        return response
+
+
 class Backup(Resource):
     @token_required
     def post(self):
@@ -416,6 +430,7 @@ api.add_resource(GetAllAdmins, '/api/getAllAdmins')
 api.add_resource(GetAcquistiIn, '/api/getAcquistiIn')
 api.add_resource(UpdateUserLang, '/api/updateUserLang')
 api.add_resource(Backup, '/api/backup')
+api.add_resource(GetAllTransactionsFrequency, '/api/getAllTransactionsFrequency')
 
 
 from src.DBClasses.User import User

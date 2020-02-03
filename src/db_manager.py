@@ -125,6 +125,33 @@ def getAllTransactions():
 
     return {'transactions': transactions} if transactions is not None else None
 
+def getAllTransactionsFrequency():
+    from src.DBClasses.Transaction import Transaction
+    transactions = getAllTransactions()['transactions']
+    if transactions is None: return None
+    count = countTransactions(transactions)
+    return {'frequencies': count} if count is not None else None
+
+def countTransactions(transactions):
+    from src.DBClasses.Product import Product
+    products = getAllProducts()['products']
+    if products is None: return None
+    frequency = {}
+    for transaction in transactions:
+        product_name = getProductNameFromId(products, transaction['product_id'])
+        if product_name is None: return None
+        try:
+            frequency[product_name] += 1
+        except KeyError:
+            frequency[product_name] = 1
+    return frequency
+
+def getProductNameFromId(products, id):
+    for product in products:
+        if product['id'] == id:
+            return product['name']
+    return None
+
 def getUserFromUsername(username):
     from src.DBClasses.User import User
     user = User.query.filter_by(username=username).first()
