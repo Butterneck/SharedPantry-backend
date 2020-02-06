@@ -256,6 +256,13 @@ def backup():
     from src.Configuration.Configure import Configuration
     if Configuration().determine_env() == 'LocalTest':
         logging.info('LocalTestMode: cannot backup')
+    else:
+        host, user, db, port = db_url_parser()
+
+        with gzip.open('backup.gz', 'wb') as backup:
+            pg_dump('--column-inserts', '-h', host, '-U', user, db, '-p', port, _out=backup)
+        return dropbox_upload('backup.gz')
+
 
 def db_url_parser():
     from os import environ
@@ -270,9 +277,8 @@ def db_url_parser():
     password = list[0].split(':')[1].split('@')[0]
     db = list[1]
 
-    with gzip.open('backup.gz', 'wb') as backup:
-        pg_dump('--column-inserts', '-h', host, '-U', user, db, '-p', port, _out=backup)
-    return dropbox_upload('backup.gz')
+    return host, user, db, port
+
 
 def dropbox_upload(backup_file):
     from datetime import date
