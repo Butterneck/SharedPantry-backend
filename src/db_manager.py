@@ -254,8 +254,20 @@ def getAcquistiIn(user_id, startDate, endDate):
 
 def backup():
     from src.Configuration.Configure import Configuration
+    from configparser import ConfigParser
+    import gzip
+    from sh import pg_dump
+
     if Configuration().determine_env() == 'LocalTest':
-        logging.info('LocalTestMode: cannot backup')
+        logging.info('LocalTestMode: local backup')
+        config = ConfigParser()
+        config.read_file(open('.config/config.ini'))
+        host = config['DB']['host']
+        user = config['DB']['username']
+        db = config['DB']['name']
+        with gzip.open('backup.gz', 'wb') as backup:
+            pg_dump('--column-inserts', '-h', host, '-U', user, db, '-p', '5432', _out=backup)
+        return {'backup': 'done'}
     else:
         host, user, db, port = db_url_parser()
 
@@ -266,8 +278,6 @@ def backup():
 
 def db_url_parser():
     from os import environ
-    import gzip
-    from sh import pg_dump
 
     db_url = environ['DATABASE_URL']
     list = db_url.split('/')[2:]
