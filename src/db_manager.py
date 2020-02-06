@@ -258,6 +258,8 @@ def backup():
     import gzip
     from sh import pg_dump
 
+    logging.info('Backupping')
+
     if Configuration().determine_env() == 'LocalTest':
         logging.info('LocalTestMode: local backup')
         config = ConfigParser()
@@ -269,6 +271,7 @@ def backup():
             pg_dump('--column-inserts', '-h', host, '-U', user, db, '-p', '5432', _out=backup)
         return {'backup': 'done'}
     else:
+        logging.info('Remote Backup')
         host, user, db, port = db_url_parser()
 
         with gzip.open('backup.gz', 'wb') as backup:
@@ -279,6 +282,8 @@ def backup():
 def db_url_parser():
     from os import environ
 
+    logging.info('Parsing db url')
+
     db_url = environ['DATABASE_URL']
     list = db_url.split('/')[2:]
     user = list[0].split(':')[0]
@@ -287,6 +292,7 @@ def db_url_parser():
     password = list[0].split(':')[1].split('@')[0]
     db = list[1]
 
+    logging.info('db url parsed')
     return host, user, db, port
 
 
