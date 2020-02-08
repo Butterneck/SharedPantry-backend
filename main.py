@@ -402,13 +402,11 @@ class GetAllTransactionsFrequency(Resource):
 class Backup(Resource):
     @token_required
     def post(self):
-        res = dbm.backup()
+        import threading
+        backup = threading.Thread(dbm.backup())
+        backup.start()
         response = jsonify(None)
-        if res is not None:
-            response.status_code = 200
-        else:
-            response.status_code = 500
-
+        response.status_code = 200
         return response
 
 

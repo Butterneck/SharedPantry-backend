@@ -269,14 +269,15 @@ def backup():
         db = config['DB']['name']
         with gzip.open('backup.gz', 'wb') as backup:
             pg_dump('--column-inserts', '-h', host, '-U', user, db, '-p', '5432', _out=backup)
-        return {'backup': 'done'}
+        return
     else:
         logging.info('Remote Backup')
         host, user, db, port = db_url_parser()
 
         with gzip.open('backup.gz', 'wb') as backup:
             pg_dump('--column-inserts', '-h', host, '-U', user, db, '-p', port, _out=backup)
-        return dropbox_upload('backup.gz')
+        dropbox_upload('backup.gz')
+        return
 
 
 def db_url_parser():
@@ -311,7 +312,7 @@ def dropbox_upload(backup_file):
         dbx.users_get_current_account()
     except AuthError:
         logging.ERROR('Invalid dropbox token, cannot authenticate')
-        return None
+        return
 
     remove_old_backups(dbx)
 
@@ -321,18 +322,18 @@ def dropbox_upload(backup_file):
             dbx.files_upload(backup.read(), backup_path, mode=WriteMode('overwrite'))
             logging.info('Backup succeded!')
             system('rm', backup_file)
-            return True
+            return
         except ApiError as err:
             if err.error.is_path() and err.error.get_path().reason.is_insufficient_space():
                 logging.Error('No free space available to Dropbox, cannot backup')
                 system('rm', backup_file)
-                return None
+                return
             elif err.user_message_text:
                 logging.ERROR('Cannot backup: ' + err.user_message_text)
-                return None
+                return
             else:
                 logging.ERROR(err)
-                return None
+                return
 
 def remove_old_backups(dbx):
     from datetime import date
