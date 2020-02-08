@@ -403,7 +403,7 @@ class Backup(Resource):
     @token_required
     def post(self):
         import threading
-        backup = threading.Thread(dbm.backup())
+        backup = threading.Thread(target=dbm.backup())
         backup.start()
         response = jsonify(None)
         response.status_code = 200
