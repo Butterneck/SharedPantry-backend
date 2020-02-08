@@ -441,4 +441,5 @@ db.session.commit()
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    debug = Configuration().determine_env() == 'LocalTest'
+    app.run(debug=debug)
