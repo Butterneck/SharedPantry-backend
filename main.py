@@ -399,17 +399,6 @@ class GetAllTransactionsFrequency(Resource):
         return response
 
 
-class Backup(Resource):
-    @token_required
-    def post(self):
-        import threading
-        backup = threading.Thread(target=dbm.backup())
-        backup.start()
-        response = jsonify(None)
-        response.status_code = 200
-        return response
-
-
 api.add_resource(GetToken, '/api/getToken')
 api.add_resource(AddUser, '/api/addUser')
 api.add_resource(AddProduct, '/api/addProduct')
@@ -427,7 +416,6 @@ api.add_resource(GetAllUsers, '/api/getAllUsers')
 api.add_resource(GetAllAdmins, '/api/getAllAdmins')
 api.add_resource(GetAcquistiIn, '/api/getAcquistiIn')
 api.add_resource(UpdateUserLang, '/api/updateUserLang')
-api.add_resource(Backup, '/api/backup')
 api.add_resource(GetAllTransactionsFrequency, '/api/getAllTransactionsFrequency')
 
 
