@@ -407,7 +407,8 @@ class Backup(Resource):
             response = jsonify(None)
             response.status_code = 403
         else:
-            dbm.backup()
+            from src.backup import backup
+            backup()
             response = jsonify(None)
             response.status_code = 200
 
