@@ -1,4 +1,4 @@
-from main import db
+from api import db
 import logging
 
 from src.DBClasses.User import User as User

@@ -1,4 +1,4 @@
-from main import db
+from api import db
 
 
 class Transaction(db.Model):
