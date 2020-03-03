@@ -406,14 +406,11 @@ class Backup(Resource):
         if not token or token != environ['SECRET_BACKUP_KEY']:
             response = jsonify(None)
             response.status_code = 403
-            return response
+        else:
+            dbm.backup()
+            response = jsonify(None)
+            response.status_code = 200
 
-        import threading
-        print('startting')
-        backup = threading.Thread(target=dbm.backup())
-        backup.start()
-        response = jsonify(None)
-        response.status_code = 200
         return response
 
 
