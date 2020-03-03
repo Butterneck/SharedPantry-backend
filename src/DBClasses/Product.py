@@ -1,4 +1,4 @@
-from api import db
+from main import db
 
 
 class Product(db.Model):

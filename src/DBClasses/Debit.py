@@ -1,4 +1,4 @@
-from api import db
+from main import db
 
 class Debit(db.Model):
 
