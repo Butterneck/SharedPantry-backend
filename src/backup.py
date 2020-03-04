@@ -12,6 +12,7 @@ def backup():
 
 
 def backup_internal():
+    import logging
     from src.Configuration.Configure import Configuration
     from configparser import ConfigParser
     import gzip
