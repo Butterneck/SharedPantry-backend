@@ -402,6 +402,8 @@ class GetAllTransactionsFrequency(Resource):
 class Backup(Resource):
     def post(self):
         token = request.headers.get('token')
+        if not token:
+            token = request.get_json()['token']
 
         if not token or token != environ['SECRET_BACKUP_KEY']:
             response = jsonify(None)
