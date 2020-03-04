@@ -17,6 +17,7 @@ def backup_internal():
     from configparser import ConfigParser
     import gzip
     from sh import pg_dump
+    from os import environ
 
     logging.info('Backupping')
 
@@ -32,7 +33,9 @@ def backup_internal():
         return
     else:
         logging.info('Remote Backup')
-        host, user, db, port = db_url_parser()
+        host, user, password, db, port = db_url_parser()
+        from os import system
+        environ["PGPASSWORD"] = password
 
         with gzip.open('backup.gz', 'wb') as backup:
             pg_dump('--column-inserts', '-h', host, '-U', user, db, '-p', port, _out=backup)
@@ -54,7 +57,7 @@ def db_url_parser():
     db = list[1]
 
     logging.info('db url parsed')
-    return host, user, db, port
+    return host, user, password, db, port
 
 
 def dropbox_upload(backup_file):
