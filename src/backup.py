@@ -84,12 +84,12 @@ def dropbox_upload(backup_file):
             logging.info('Uploading ' + backup_file + ' to Dropbox as ')
             dbx.files_upload(backup.read(), backup_path, mode=WriteMode('overwrite'))
             logging.info('Backup succeded!')
-            system('rm', backup_file)
+            system('rm ' + backup_file)
             return
         except ApiError as err:
             if err.error.is_path() and err.error.get_path().reason.is_insufficient_space():
                 logging.Error('No free space available to Dropbox, cannot backup')
-                system('rm', backup_file)
+                system('rm ' + backup_file)
                 return
             elif err.user_message_text:
                 logging.ERROR('Cannot backup: ' + err.user_message_text)
