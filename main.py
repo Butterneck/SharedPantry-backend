@@ -303,11 +303,12 @@ class EditUserAdmin(Resource):
         data = request.get_json()
         try:
             chat_id = data['chat_id']
+            is_admin = data['is_admin']
         except KeyError:
             response = jsonify(None)
             response.status_code = 400
             return response
-        res = dbm.editUserAdmin(chat_id)
+        res = dbm.editUserAdmin(chat_id, is_admin)
         if res is not None:
             response = jsonify(res)
             response.status_code = 200

@@ -214,10 +214,10 @@ def editUserName(caht_id, username):
         }
     } if user is not None else None
 
-def editUserAdmin(chat_id):
+def editUserAdmin(chat_id, is_admin):
     from src.DBClasses.User import User
     user = User.query.filter_by(chat_id=chat_id).first()
-    user.is_admin = not user.is_admin
+    user.is_admin = is_admin
     db.session.commit()
     return {'user': {
         'chat_id': user.chat_id,
